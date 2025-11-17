@@ -1,5 +1,10 @@
 # 🌐 IPAM - Intelligent IP Address Management
 
+
+<img width="3780" height="1890" alt="2" src="https://github.com/user-attachments/assets/6f3e2fc7-48b5-402b-93f0-a750433e743c" />
+
+
+
 <div align="center">
 
 ![IPAM Banner](https://img.shields.io/badge/IPAM-Intelligent%20IP%20Management-blue?style=for-the-badge&logo=network-wired&logoColor=white)
@@ -238,12 +243,12 @@ App (Next.js 16)
 - **API Response Time**: <100ms (cached), <500ms (uncached)
 
 ### Geographic Coverage
-- **Africa**: 54 countries supported
-- **Asia**: 48 countries supported
-- **Europe**: 44 countries supported
-- **North America**: 23 countries supported
-- **South America**: 12 countries supported
-- **Oceania**: 14 countries supported
+- **Africa**: - countries supported
+- **Asia**: - countries supported
+- **Europe**: - countries supported
+- **North America**: - countries supported
+- **South America**: - countries supported
+- **Oceania**: - countries supported
 
 ## 🏁 Quick Start
 
