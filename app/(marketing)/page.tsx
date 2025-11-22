@@ -6,7 +6,6 @@ import Testimonials from "@/components/landing/Testimonials";
 import CTA from "@/components/landing/CTA";
 import Header from "@/components/landing/Header";
 import Footer from "@/components/landing/Footer";
-import GlobeDemo from "@/components/globe-demo";
 
 export default function Home() {
     return (
@@ -16,7 +15,6 @@ export default function Home() {
                 <div className="w-full">
                     <Hero />
                     <Features />
-                    <GlobeDemo />
                     <Testimonials />
                     <CTA />
                     <Footer />
