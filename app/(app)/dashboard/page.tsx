@@ -21,7 +21,7 @@ const CTASection = dynamic(() => import('@/components/landing/cta-section').then
   ssr: true,
 });
 
-const LandingFooter = dynamic(() => import('@/components/landing/footer').then(mod => ({ default: mod.LandingFooter })), {
+const LandingFooter = dynamic(() => import('@/components/landing/footer'), {
   loading: () => <FooterSkeleton />,
   ssr: true,
 });
@@ -149,7 +149,7 @@ export default function Home() {
       {/* Preload critical assets */}
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-      
+
       {/* Structured Data Script */}
       <script
         type="application/ld+json"
