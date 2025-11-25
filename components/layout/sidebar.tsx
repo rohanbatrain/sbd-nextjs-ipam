@@ -1,110 +1,145 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils/cn';
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 import {
   LayoutDashboard,
   Globe,
-  MapPin,
-  Server,
-  Map,
+  Search,
   BarChart3,
-  FileText,
+  History,
   Settings,
+  LogOut,
+  Menu,
+  X,
   ChevronLeft,
   ChevronRight,
-} from 'lucide-react';
-
-const sidebarItems = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/dashboard/countries', label: 'Countries', icon: Globe },
-  { href: '/dashboard/regions', label: 'Regions', icon: MapPin },
-  { href: '/dashboard/hosts', label: 'Hosts', icon: Server },
-  { href: '/dashboard/map', label: 'Map View', icon: Map },
-  { href: '/dashboard/analytics', label: 'Analytics', icon: BarChart3 },
-  { href: '/dashboard/audit', label: 'Audit Log', icon: FileText },
-  { href: '/dashboard/settings', label: 'Settings', icon: Settings },
-];
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 interface SidebarProps {
-  className?: string;
+  appName: string;
 }
 
-export function Sidebar({ className }: SidebarProps) {
-  const [collapsed, setCollapsed] = useState(false);
+const navigation = [
+  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+  { name: "IP Management", href: "/allocate", icon: Globe },
+  { name: "Search", href: "/search", icon: Search },
+  { name: "Analytics", href: "/analytics", icon: BarChart3 },
+  { name: "Audit Log", href: "/audit", icon: History },
+  { name: "Settings", href: "/settings", icon: Settings },
+];
+
+export function Sidebar({ appName, children }: SidebarProps & { children: React.ReactNode }) {
   const pathname = usePathname();
+  const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <aside
-      className={cn(
-        'relative flex flex-col border-r bg-card transition-all duration-300',
-        collapsed ? 'w-16' : 'w-64',
-        className
-      )}
-      role="complementary"
-      aria-label="Sidebar navigation"
-    >
-      {/* Collapse Toggle */}
-      <div className="flex h-16 items-center justify-end border-b px-4">
+    <>
+      {/* Mobile menu button */}
+      <div className="lg:hidden fixed top-4 left-4 z-50">
         <Button
-          variant="ghost"
+          variant="outline"
           size="icon"
-          onClick={() => setCollapsed(!collapsed)}
-          className="h-8 w-8"
-          aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-          aria-expanded={!collapsed}
+          onClick={() => setMobileOpen(!mobileOpen)}
         >
-          {collapsed ? (
-            <ChevronRight className="h-4 w-4" aria-hidden="true" />
+          {mobileOpen ? (
+            <X className="h-5 w-5" />
           ) : (
-            <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+            <Menu className="h-5 w-5" />
           )}
-          <span className="sr-only">
-            {collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-          </span>
         </Button>
       </div>
 
-      {/* Navigation Items */}
-      <nav className="flex-1 space-y-1 p-2" aria-label="Main navigation">
-        {sidebarItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = pathname === item.href;
-
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
-                isActive
-                  ? 'bg-primary text-primary-foreground'
-                  : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground',
-                collapsed && 'justify-center'
-              )}
-              title={collapsed ? item.label : undefined}
-              aria-label={item.label}
-              aria-current={isActive ? 'page' : undefined}
-            >
-              <Icon className="h-5 w-5 shrink-0" aria-hidden="true" />
-              {!collapsed && <span>{item.label}</span>}
-              {collapsed && <span className="sr-only">{item.label}</span>}
-            </Link>
-          );
-        })}
-      </nav>
-
-      {/* Footer */}
-      {!collapsed && (
-        <div className="border-t p-4" role="contentinfo">
-          <p className="text-xs text-muted-foreground">
-            IPAM v1.0.0
-          </p>
-        </div>
+      {/* Mobile sidebar overlay */}
+      {mobileOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          onClick={() => setMobileOpen(false)}
+        />
       )}
-    </aside>
+
+      {/* Sidebar */}
+      <aside
+        className={cn(
+          "fixed left-0 top-0 z-40 h-screen bg-background border-r transition-all duration-300",
+          collapsed ? "w-16" : "w-64",
+          mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+        )}
+      >
+        <div className="flex h-full flex-col">
+          {/* Header */}
+          <div className="flex h-16 items-center justify-between border-b px-4">
+            {!collapsed && (
+              <Link href="/dashboard" className="flex items-center gap-2">
+                <span className="text-xl font-bold">{appName}</span>
+              </Link>
+            )}
+            <Button
+              variant="ghost"
+              size="icon"
+              className={cn("hidden lg:flex", collapsed && "mx-auto")}
+              onClick={() => setCollapsed(!collapsed)}
+            >
+              {collapsed ? (
+                <ChevronRight className="h-4 w-4" />
+              ) : (
+                <ChevronLeft className="h-4 w-4" />
+              )}
+            </Button>
+          </div>
+
+          {/* Navigation */}
+          <nav className="flex-1 space-y-1 p-2 overflow-y-auto">
+            {navigation.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={cn(
+                    "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                    isActive
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  )}
+                  title={collapsed ? item.name : undefined}
+                >
+                  <item.icon className="h-5 w-5 shrink-0" />
+                  {!collapsed && <span>{item.name}</span>}
+                </Link>
+              );
+            })}
+          </nav>
+
+          {/* Footer */}
+          <div className="border-t p-2">
+            <Link
+              href="/auth/login"
+              className={cn(
+                "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              )}
+              title={collapsed ? "Logout" : undefined}
+            >
+              <LogOut className="h-5 w-5 shrink-0" />
+              {!collapsed && <span>Logout</span>}
+            </Link>
+          </div>
+        </div>
+      </aside>
+
+      {/* Main Content Wrapper */}
+      <main
+        className={cn(
+          "min-h-screen transition-all duration-300",
+          collapsed ? "lg:ml-16" : "lg:ml-64"
+        )}
+      >
+        {children}
+      </main>
+    </>
   );
 }
